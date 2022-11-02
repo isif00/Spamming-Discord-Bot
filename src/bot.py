@@ -1,19 +1,26 @@
-from ast import arg
 import os
 import discord
-from discord.ext import commands
 from dotenv import load_dotenv
+
+
+Is_running = True
 
 load_dotenv()
 
+#Getting Data from User
+while Is_running:
+    try:
+        user_id = int(input("Enter user id: "))
+        tries = int(input("Enter a number: "))
+        joke = str(input("Enter a message: "))
+        Is_running = False
+    except ValueError:
+        print("Enter a valid data")
 
+#Initiating the bot
 intents = discord.Intents().all()
 client = discord.Client(intents=intents)
-bot = commands.Bot(command_prefix='$', intents=intents)
-
 token = os.getenv('TOKEN')
-
-
 
 @client.event
 async def on_ready():
@@ -21,21 +28,17 @@ async def on_ready():
 
 
 @client.event
+#Making Sure the bot doesn't reply to himself
 async def on_message(message):
     print(message.content)
     if message.author == client.user:
         return
 
-    if message.content.startswith('$blabla'):
-        user_id = "@752934151124025387"
-        for i in range(1, 200):
-            await message.channel.send(f"🤣😂🤣😂🤣🤣😂😂🤣😂😁")
+#Spamming a User
+    if message.content.startswith('$spam'):
+        for i in range(1, tries): 
+            await message.channel.send(f"<@{user_id}> {joke} ")
 
-@bot.command(name="test")
-async def test(arg):
-    print("zssssssssss")
-    await arg.channel.send("bom bom")
-    print(arg)
 
 client.run(token)
 
